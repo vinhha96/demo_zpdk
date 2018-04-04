@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonPayOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // @param "ZPTransToken" is virtual value to test. Merchant must request server ZaloPay to get data correctly
                 ZaloPaySDK.getInstance().payOrder(MainActivity.this, "ZPTransToken", new MerchantListener(MainActivity.this));
             }
         });
