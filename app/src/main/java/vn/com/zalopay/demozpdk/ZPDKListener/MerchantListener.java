@@ -3,10 +3,13 @@ package vn.com.zalopay.demozpdk.ZPDKListener;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
+import vn.com.zalopay.demozpdk.MainActivity;
 import vn.zalopay.sdk.ZaloPayErrorCode;
 import vn.zalopay.sdk.ZaloPayListener;
+import vn.zalopay.sdk.ZaloPaySDK;
 
 public class MerchantListener implements ZaloPayListener {
     private String TAG = "Merchant Callback";
@@ -27,7 +30,13 @@ public class MerchantListener implements ZaloPayListener {
             new AlertDialog.Builder(mContext)
                     .setTitle("Error Payment")
                     .setMessage("ZaloPay App not install on this Device.")
-                    .setNegativeButton("Yes", null).show();
+                    .setPositiveButton("Open Market", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ZaloPaySDK.getInstance().navigateToStore(mContext);
+                        }
+                    })
+                    .setNegativeButton("Back", null).show();
             Log.d(TAG, "onError: ZaloPay App not install on this Device.");
         } else {
             @SuppressLint("DefaultLocale")
