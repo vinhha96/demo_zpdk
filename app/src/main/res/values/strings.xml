@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Demo ZPDK</string>
+    <string name="payOder">Thanh toán</string>
 </resources>
