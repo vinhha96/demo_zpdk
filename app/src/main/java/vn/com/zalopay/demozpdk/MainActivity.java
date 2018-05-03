@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // @param "ZPTransToken" is virtual value to test. Merchant must request server ZaloPay to get data correctly
-                ZaloPaySDK.getInstance().payOrder(MainActivity.this, "ZPTransToken", new MerchantListener(MainActivity.this));
+                ZaloPaySDK.getInstance().payOrder(MainActivity.this, "rghBdODENaIh9NRACLMnaw", new MerchantListener(MainActivity.this));
             }
         });
     }
