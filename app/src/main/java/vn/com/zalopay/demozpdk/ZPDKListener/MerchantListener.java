@@ -1,20 +1,22 @@
 package vn.com.zalopay.demozpdk.ZPDKListener;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 
+import vn.com.zalopay.demozpdk.Constant.ConstantCode;
 import vn.com.zalopay.demozpdk.Constant.PaymentErrorCode;
-import vn.com.zalopay.demozpdk.MainActivity;
+import vn.com.zalopay.demozpdk.Helper.Dialog;
 import vn.zalopay.sdk.ZaloPayErrorCode;
 import vn.zalopay.sdk.ZaloPayListener;
 import vn.zalopay.sdk.ZaloPaySDK;
 
+
 public class MerchantListener implements ZaloPayListener {
-    private String TAG = "Merchant Callback";
     private Context mContext;
 
     public MerchantListener(Context mContext) {
@@ -22,18 +24,15 @@ public class MerchantListener implements ZaloPayListener {
     }
 
     @Override
-    public void onPaymentSucceeded(String transactionId) {
+    public void onPaymentSucceeded(String transactionId, String transToken) {
         @SuppressLint("DefaultLocale")
-        String mes = String.format("onPaymentSuccess: On successful with transactionId: %s]", transactionId);
-        new AlertDialog.Builder(mContext)
-                .setTitle("Payment Success")
-                .setMessage(mes)
-                .setNegativeButton("Yes", null).show();
-        Log.d(TAG, "onSuccess: On successful with transactionId:" + transactionId);
+        Spanned mes = Html.fromHtml(String.format("onPaymentSuccess: <br><br> On successful with: <br>- transactionId: <b> %s  </b> <br> - transtoken: <b>  %s </b> ", transactionId, transToken));
+        Dialog.showNaturalDialog(mContext, "Payment Success", mes, "Yes");
+        Log.d(ConstantCode.TAG, "onSuccess: On successful with transactionId: " + transactionId + "- transtoken: %s" + transToken);
     }
 
     @Override
-    public void onPaymentError(ZaloPayErrorCode zaloPayErrorCode, int paymentErrorCode) {
+    public void onPaymentError(ZaloPayErrorCode zaloPayErrorCode, int paymentErrorCode, String zpTransToken) {
         if (zaloPayErrorCode == ZaloPayErrorCode.ZALO_PAY_NOT_INSTALLED) {
             new AlertDialog.Builder(mContext)
                     .setTitle("Error Payment")
@@ -45,23 +44,17 @@ public class MerchantListener implements ZaloPayListener {
                         }
                     })
                     .setNegativeButton("Back", null).show();
-            Log.d(TAG, "onError: ZaloPay App not install on this Device.");
+            Log.d(ConstantCode.TAG, "onError: <br> <b> <i> ZaloPay App not install on this Device. </i> </b>");
         } else if (zaloPayErrorCode == ZaloPayErrorCode.PAYMENT_ERROR && paymentErrorCode == PaymentErrorCode.USER_CANCEL.getValue()) {
             @SuppressLint("DefaultLocale")
-            String mes = "Payment error: User click back return to app.";
-            new AlertDialog.Builder(mContext)
-                    .setTitle("Error Payment")
-                    .setMessage(mes)
-                    .setNegativeButton("Yes", null).show();
-            Log.d(TAG, mes);
+            Spanned mes = Html.fromHtml("<b> Payment error <b> : User click back return to app.");
+            Dialog.showNaturalDialog(mContext, "Payment Error", mes, "Yes");
+            Log.d(ConstantCode.TAG, String.valueOf(mes));
         } else {
             @SuppressLint("DefaultLocale")
-            String mes = String.format("onPaymentError: payment error with [error: %s, paymentErrorCode: %d]", zaloPayErrorCode, paymentErrorCode);
-            new AlertDialog.Builder(mContext)
-                    .setTitle("Error Payment")
-                    .setMessage(mes)
-                    .setNegativeButton("Yes", null).show();
-            Log.d(TAG, mes);
+            Spanned mes = Html.fromHtml(String.format("onPaymentError: <br> <br> payment error with: <br> - error: <b> %s </b> <br> - paymentErrorCode: <b> %d </b> <br> - zpTransToken: <b> %s </b>", zaloPayErrorCode, paymentErrorCode, zpTransToken));
+            Dialog.showNaturalDialog(mContext, "Payment Error", mes, "Yes");
+            Log.d(ConstantCode.TAG, String.valueOf(mes));
         }
     }
 }
